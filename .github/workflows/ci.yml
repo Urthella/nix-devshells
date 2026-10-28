@@ -1,0 +1,36 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v31
+      - run: nix flake check
+
+  template:
+    needs: check
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: rust
+            probe: cargo --version && rustc --version && cargo clippy --version && rust-analyzer --version
+          - name: go
+            probe: go version && gopls version && golangci-lint --version
+    name: template (${{ matrix.name }})
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v31
+      - name: Init template into an empty dir and enter its shell
+        run: |
+          mkdir "$RUNNER_TEMP/t" && cd "$RUNNER_TEMP/t"
+          nix flake init -t "$GITHUB_WORKSPACE#${{ matrix.name }}"
+          test -f .envrc
+          nix develop -c bash -c "${{ matrix.probe }}"
