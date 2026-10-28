@@ -15,6 +15,9 @@ direnv allow        # or: nix develop
 |---|---|
 | `rust` | cargo, rustc, clippy, rustfmt, rust-analyzer |
 | `go` | go, gopls, golangci-lint |
+| `node` | node 24, pnpm, tsc, typescript-language-server |
+| `python` | python3, uv (uses the Nix Python, never downloads one), ruff |
+| `solidity` | foundry (forge, cast, anvil), solc |
 
 List them with `nix flake show github:Urthella/nix-devshells`.
 

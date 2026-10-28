@@ -24,6 +24,12 @@ jobs:
             probe: cargo --version && rustc --version && cargo clippy --version && rust-analyzer --version
           - name: go
             probe: go version && gopls version && golangci-lint --version
+          - name: node
+            probe: node --version && pnpm --version && tsc --version
+          - name: python
+            probe: python --version && uv --version && ruff --version
+          - name: solidity
+            probe: forge --version && anvil --version && solc --version
     name: template (${{ matrix.name }})
     steps:
       - uses: actions/checkout@v4
